@@ -1,7 +1,5 @@
-const app = require("../app/app");
 const User = require("../models/user.model");
 const createToken = require("../middlewares/jwt.middleware");
-const checkRequest = require("../middlewares/app.middleware");
 
 const loginRoute = async (req, res) => {
   const { email, password } = req.body;

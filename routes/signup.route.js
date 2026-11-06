@@ -1,6 +1,4 @@
-const app = require("../app/app");
 const User = require("../models/user.model");
-const checkRequest = require("../middlewares/app.middleware");
 const bcrypt = require("bcrypt");
 
 const signUpRoute = async (req, res) => {

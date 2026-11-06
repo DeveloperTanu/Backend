@@ -10,7 +10,7 @@ app.get("/", checkRequest, (req, res) => {
   res.send("/");
 });
 
-app.get("/signup", signUpRoute);
-app.post("/login", loginRoute);
+app.get("/signup", checkRequest, signUpRoute);
+app.post("/login", checkRequest, loginRoute);
 
 module.exports = app;
