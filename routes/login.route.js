@@ -1,34 +1,50 @@
+const bcrypt = require("bcrypt");
 const User = require("../models/user.model");
 const createToken = require("../middlewares/jwt.middleware");
 
 const loginRoute = async (req, res) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  const userPassword = await User.findOne({ password });
-  
-  token;
-  
-  if (password != userPassword) {
-    return res.status(409).json({
-      success: false,
-      message: "Password is incorrect.",
-    });
-  }
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Email and password are required.",
+      });
+    }
 
-  if (!email || !password) {
-    return res.status(409).json({
-      message: "name, email or password is required",
-    });
-  }
+    const user = await User.findOne({ email });
 
-  if (email && password) {
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid email or password.",
+      });
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid email or password.",
+      });
+    }
+
+    const token = createToken(user);
+
     return res.status(200).json({
       success: true,
-      message: "successfully logged in.",
-      createToken,
+      message: "Successfully logged in.",
+      token,
+    });
+  } catch (error) {
+    console.error("Login failed:", error.message);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error.",
     });
   }
-
 };
 
 module.exports = loginRoute;
